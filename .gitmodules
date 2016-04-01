@@ -1,0 +1,4 @@
+[submodule "light_ws2812"]
+	path = src/light_ws2812
+	url = https://github.com/cpldcpu/light_ws2812
+	branch = master
