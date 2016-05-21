@@ -78,7 +78,7 @@ OBJDIR = obj
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = $(TARGET).c light_ws2812.c
+SRC = $(TARGET).c light_ws2812.c twi.c
 
 
 # List C++ source files here. (C dependencies are automatically generated.)
