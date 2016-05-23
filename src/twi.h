@@ -9,7 +9,7 @@
 #define TWI_SCL_DDR DDRA
 #define TWI_SCL_PIN PA7
 
-#define TWI_MSG_SIZE 8
+#define TWI_MSG_SIZE 4
 
 
 #define TWI_MSG1(msg, a)   do{ \
@@ -17,7 +17,7 @@
    (msg)->len = 1; \
 }while(0)
 
-#define TWI_MSG2(msg, a, b)   do{ \\
+#define TWI_MSG2(msg, a, b)   do{ \
    (msg)->data[0] = (a); \
    (msg)->data[1] = (b); \
    (msg)->len = 2; \
