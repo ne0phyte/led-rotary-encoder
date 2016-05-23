@@ -14,10 +14,7 @@ void twi_init(uint8_t address) {
    TWSCRA = (_BV(TWSHE) | _BV(TWDIE) | _BV(TWASIE) | _BV(TWEN) | _BV(TWSIE));
 }
 
-ISR(TWI_SLAVE_vect)
-{
-   TWI_SCL_HIGH;
-
+void twi_isr_routine(void) {
    uint8_t status = TWSSRA;
    if ( (status & (_BV(TWC) | _BV(TWBE))) ) {
       // error or collision
@@ -40,6 +37,7 @@ ISR(TWI_SLAVE_vect)
           twi_on_receive(&msg);
         }
         TWSSRA = _BV(TWASIF); // clear interrupt
+        //return;
       }
    } else if (status & _BV(TWDIF)) {
       if (twdir) {
@@ -58,6 +56,12 @@ ISR(TWI_SLAVE_vect)
    }
    // ACK
    TWSCRB = 0b0011;
+}
+
+ISR(TWI_SLAVE_vect)
+{
+   TWI_SCL_HIGH;
+   twi_isr_routine();
    TWI_SCL_LOW;
 }
 

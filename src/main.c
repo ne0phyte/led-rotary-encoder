@@ -28,7 +28,7 @@ uint8_t manual_mode = 0;
 
 void set_led(uint8_t i, uint8_t r, uint8_t g, uint8_t b);
 void update_leds(void);
-uint8_t animate(uint8_t curr, uint8_t target, uint8_t step);
+uint8_t animate(uint8_t curr, uint8_t target);
 void update_leds_current(void);
 void clear_leds(void);
 void led_wheel(uint8_t led, uint8_t pos);
@@ -57,7 +57,7 @@ void twi_on_request(TWIMsg *msg) {
 
 void twi_on_receive(TWIMsg *msg) {
    uint8_t i = msg->data[0];
-
+    
    switch (i & CMD_MASK) {
       case CMD_SET_MODE:
          switch (i & CMD_DATA_MASK) {
@@ -117,21 +117,16 @@ void update_leds(void) {
    }
 }
 
-uint8_t animate(uint8_t curr, uint8_t target, uint8_t step) {
-   int16_t diff = (target - curr)/step;
-   if (diff < -step) {
-      return curr + diff;
-   } else if (diff > step) {
-      return curr + diff;
-   }
-   return target;
+inline uint8_t animate(uint8_t curr, uint8_t target) {
+   int16_t diff = (target+(curr*3))/4;
+   return diff;
 }
 
 void update_leds_current(void) {
    for (uint8_t i = 0; i <LED_COUNT; i++) {
-      leds_current[i].r = animate(leds_current[i].r, leds[i].r, 2);
-      leds_current[i].g = animate(leds_current[i].g, leds[i].g, 2);
-      leds_current[i].b = animate(leds_current[i].b, leds[i].b, 2);
+      leds_current[i].r = animate(leds_current[i].r, leds[i].r);
+      leds_current[i].g = animate(leds_current[i].g, leds[i].g);
+      leds_current[i].b = animate(leds_current[i].b, leds[i].b);
    }
 }
 
@@ -149,7 +144,7 @@ int main (void) {
       }
       update_leds_current();
       ws2812_setleds(leds_current, LED_COUNT);
-      _delay_ms(32);
+      _delay_ms(16);
    }
    return 0;
 }
